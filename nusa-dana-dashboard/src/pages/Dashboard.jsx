@@ -1,14 +1,15 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function Dashboard() {
+  const navigate = useNavigate();
+
   return (
     <div className="p-6 space-y-6">
-      {/* Announcement */}
       <div className="bg-red-100 border border-red-300 text-red-700 p-4 rounded-lg">
         <strong>PENGUMUMAN:</strong> Kamu belum mengisi projek, isi sekarang
       </div>
 
-      {/* Progress & Dana */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="bg-white shadow p-4 rounded-lg">
           <h3 className="font-semibold mb-3">Progress Pengembangan</h3>
@@ -43,13 +44,15 @@ export default function Dashboard() {
         </div>
       </div>
 
-      {/* Projects Section */}
       <div className="bg-white shadow p-4 rounded-lg text-center">
         <h3 className="font-semibold mb-2">Projek Teratas</h3>
         <p className="text-gray-500 mb-4">
           Buat projek untuk pengajuan proposal sekarang
         </p>
-        <button className="bg-sky-600 text-white px-5 py-2 rounded-lg">
+        <button
+          onClick={() => navigate("/project")}
+          className="bg-sky-600 text-white px-5 py-2 rounded-lg"
+        >
           Buat Sekarang
         </button>
       </div>

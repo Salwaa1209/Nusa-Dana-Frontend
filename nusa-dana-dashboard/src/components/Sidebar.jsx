@@ -1,38 +1,38 @@
 import React from "react";
-import { Home, Folder, BarChart, Briefcase, Settings, LogOut } from "lucide-react";
+import { Home, Folder, TrendingUp, Monitor, Settings, LogOut } from "lucide-react";
+import { NavLink } from "react-router-dom";
 
 export default function Sidebar() {
-  const menu = [
-    { name: "Halaman Utama", icon: <Home size={18} /> },
-    { name: "Project", icon: <Folder size={18} /> },
-    { name: "Dana Desa", icon: <BarChart size={18} /> },
-    { name: "Pekerjaan", icon: <Briefcase size={18} /> },
-  ];
+  const navItem =
+    "flex items-center gap-2 px-4 py-2 rounded-lg text-gray-700 hover:bg-sky-100 transition";
+
+  const activeClass = "bg-sky-600 text-white hover:bg-sky-700";
 
   return (
     <aside className="w-64 bg-white shadow-md flex flex-col justify-between">
       <div>
-        <h1 className="text-2xl font-semibold text-center py-6 text-sky-700">
-          NusaDana
-        </h1>
-        <nav className="flex flex-col gap-1 px-3">
-          {menu.map((item) => (
-            <button
-              key={item.name}
-              className="flex items-center gap-3 px-4 py-2 text-gray-600 hover:bg-sky-50 rounded-lg"
-            >
-              {item.icon}
-              {item.name}
-            </button>
-          ))}
+        <div className="text-xl font-semibold p-4 border-b">NusaDana</div>
+        <nav className="mt-4 space-y-1">
+          <NavLink to="/" end className={({ isActive }) => `${navItem} ${isActive ? activeClass : ""}`}>
+            <Home size={18} /> Halaman Utama
+          </NavLink>
+          <NavLink to="/project" className={({ isActive }) => `${navItem} ${isActive ? activeClass : ""}`}>
+            <Folder size={18} /> Project
+          </NavLink>
+          <button className={`${navItem}`}>
+            <TrendingUp size={18} /> Dana Desa
+          </button>
+          <button className={`${navItem}`}>
+            <Monitor size={18} /> Pekerjaan
+          </button>
         </nav>
       </div>
 
-      <div className="p-3 border-t">
-        <button className="flex items-center gap-3 px-4 py-2 w-full text-gray-600 hover:bg-sky-50 rounded-lg">
+      <div className="p-4 border-t space-y-2">
+        <button className={`${navItem}`}>
           <Settings size={18} /> Pengaturan
         </button>
-        <button className="flex items-center gap-3 px-4 py-2 w-full text-gray-600 hover:bg-sky-50 rounded-lg mt-1">
+        <button className={`${navItem}`}>
           <LogOut size={18} /> Keluar
         </button>
       </div>
