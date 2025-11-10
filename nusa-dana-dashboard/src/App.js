@@ -9,6 +9,7 @@ import Sidebar from "./components/Sidebar";
 import Topbar from "./components/Topbar";
 import Dashboard from "./pages/Dashboard";
 import Project from "./pages/Project";
+import DanaDesa from "./pages/DanaDesa";
 import { ProjectProvider } from "./components/ProjectContext";
 
 export default function App() {
@@ -26,6 +27,7 @@ export default function App() {
               <Routes>
                 <Route path="/" element={<Dashboard />} />
                 <Route path="/project" element={<Project />} />
+                <Route path="/danadesa" element={<DanaDesa />} />
                 <Route path="*" element={<Navigate to="/" />} />
               </Routes>
             </main>
