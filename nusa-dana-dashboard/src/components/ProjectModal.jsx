@@ -1,20 +1,46 @@
 import React, { useState } from "react";
+import { useProjects } from "./ProjectContext";
 
 export default function ProjectModal({ onClose }) {
+  const { addProject } = useProjects(); // ✅ use the hook
   const [step, setStep] = useState(1);
 
-  // handle next step
+  const [formData, setFormData] = useState({
+    title: "",
+    jenis: "",
+    lokasi: "",
+    tahun: "",
+    volume: "",
+    waktu: "",
+    dana: "",
+    skor: "",
+    status: "selesai", // completed projects
+  });
+
+  // handle change for all inputs
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
   const nextStep = () => {
-    if (step < 5) setStep(step + 1);
-    else onClose(); // close when done
+    if (step < 5) setStep((s) => s + 1);
+    else handleSubmit();
   };
 
-  // handle back step
   const prevStep = () => {
-    if (step > 1) setStep(step - 1);
+    if (step > 1) setStep((s) => s - 1);
   };
 
-  // progress bar width
+  const handleSubmit = () => {
+    if (!formData.title || !formData.jenis || !formData.lokasi) {
+      alert("Mohon lengkapi semua data proyek sebelum selesai.");
+      return;
+    }
+    addProject(formData);
+    onClose();
+  };
+
   const progress = `${(step / 5) * 100}%`;
 
   return (
@@ -48,6 +74,9 @@ export default function ProjectModal({ onClose }) {
             <div>
               <label className="text-sm font-medium">Nama Proyek/Kegiatan</label>
               <input
+                name="title"
+                value={formData.title}
+                onChange={handleChange}
                 type="text"
                 placeholder='Ex: "Pembangunan Jalan Usaha Tani Dusun Wogo"'
                 className="w-full mt-1 p-2 border rounded"
@@ -56,15 +85,23 @@ export default function ProjectModal({ onClose }) {
               <label className="text-sm font-medium mt-3 block">
                 Jenis Infrastruktur
               </label>
-              <select className="w-full mt-1 p-2 border rounded">
-                <option>Pilih Jenis</option>
-                <option>Jalan</option>
-                <option>Jembatan</option>
-                <option>Irigasi</option>
+              <select
+                name="jenis"
+                value={formData.jenis}
+                onChange={handleChange}
+                className="w-full mt-1 p-2 border rounded"
+              >
+                <option value="">Pilih Jenis</option>
+                <option value="Jalan">Jalan</option>
+                <option value="Jembatan">Jembatan</option>
+                <option value="Irigasi">Irigasi</option>
               </select>
 
               <label className="text-sm font-medium mt-3 block">Lokasi</label>
               <input
+                name="lokasi"
+                value={formData.lokasi}
+                onChange={handleChange}
                 type="text"
                 placeholder="Nama desa, dusun, RT/RW"
                 className="w-full mt-1 p-2 border rounded"
@@ -74,6 +111,9 @@ export default function ProjectModal({ onClose }) {
             <div>
               <label className="text-sm font-medium">Tahun Pelaksanaan Proyek</label>
               <input
+                name="tahun"
+                value={formData.tahun}
+                onChange={handleChange}
                 type="text"
                 placeholder='Ex: "2025"'
                 className="w-full mt-1 p-2 border rounded"
@@ -81,6 +121,9 @@ export default function ProjectModal({ onClose }) {
 
               <label className="text-sm font-medium mt-3 block">Volume / Luasan</label>
               <input
+                name="volume"
+                value={formData.volume}
+                onChange={handleChange}
                 type="text"
                 placeholder="Ex: 500 m jalan, 3 unit MCK, 1 sumur bor"
                 className="w-full mt-1 p-2 border rounded"
@@ -90,6 +133,9 @@ export default function ProjectModal({ onClose }) {
                 Perkiraan Waktu Pelaksanaan
               </label>
               <input
+                name="waktu"
+                value={formData.waktu}
+                onChange={handleChange}
                 type="text"
                 placeholder="Ex: 60 hari kerja, April–Juni 2025"
                 className="w-full mt-1 p-2 border rounded"
@@ -100,98 +146,52 @@ export default function ProjectModal({ onClose }) {
 
         {/* STEP 2 */}
         {step === 2 && (
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="text-sm font-medium">Penanggung Jawab / Kades</label>
-              <input
-                type="text"
-                placeholder="Nama Penanggung Jawab"
-                className="w-full mt-1 p-2 border rounded"
-              />
+          <div className="space-y-3">
+            <label className="text-sm font-medium block">Permasalahan / Kebutuhan</label>
+            <input
+              type="text"
+              placeholder="Tulis permasalahan di lokasi proyek"
+              className="w-full p-2 border rounded"
+            />
 
-              <label className="text-sm font-medium mt-3 block">Pelaksana Kegiatan (TPK)</label>
-              <select className="w-full mt-1 p-2 border rounded">
-                <option>Pilih Jenis</option>
-                <option>Jalan</option>
-                <option>Jembatan</option>
-                <option>Irigasi</option>
-                <option>Drainase</option>
-              </select>
+            <label className="text-sm font-medium block">Tujuan Pembangunan</label>
+            <input
+              type="text"
+              placeholder="Apa tujuan kegiatan ini?"
+              className="w-full p-2 border rounded"
+            />
 
-              <label className="text-sm font-medium mt-3 block">Masyarakat Terlibat</label>
-              <input
-                type="text"
-                placeholder="Nama desa, dusun, RT/RW"
-                className="w-full mt-1 p-2 border rounded"
-              />
-            </div>
-
-            <div>
-              <label className="text-sm font-medium">Permasalahan / Kebutuhan</label>
-              <input
-                type="text"
-                placeholder="Tahun Pelaksanaan"
-                className="w-full mt-1 p-2 border rounded"
-              />
-
-              <label className="text-sm font-medium mt-3 block">Tujuan Pembangunan</label>
-              <select className="w-full mt-1 p-2 border rounded">
-                <option>Pilih Jenis</option>
-                <option>Perbaikan Infrastruktur</option>
-                <option>Peningkatan Kualitas Hidup</option>
-              </select>
-
-              <label className="text-sm font-medium mt-3 block">Manfaat bagi Masyarakat</label>
-              <input
-                type="text"
-                placeholder="Durasi Pengerjaan"
-                className="w-full mt-1 p-2 border rounded"
-              />
-            </div>
+            <label className="text-sm font-medium block">Manfaat bagi Masyarakat</label>
+            <input
+              type="text"
+              placeholder="Tulis manfaat proyek"
+              className="w-full p-2 border rounded"
+            />
           </div>
         )}
 
         {/* STEP 3 */}
         {step === 3 && (
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="text-sm font-medium">Uraian Pekerjaan</label>
-              <input
-                type="text"
-                placeholder='Ex: “Pembersihan lahan, pengurugan, pengecoran, finishing”'
-                className="w-full mt-1 p-2 border rounded"
-              />
+          <div className="space-y-3">
+            <label className="text-sm font-medium block">Total Anggaran (Rp)</label>
+            <input
+              name="dana"
+              value={formData.dana}
+              onChange={handleChange}
+              type="text"
+              placeholder="Ex: 15000000"
+              className="w-full p-2 border rounded"
+            />
 
-              <label className="text-sm font-medium mt-3 block">Volume & Satuan</label>
-              <input
-                type="text"
-                placeholder="Contoh: 100 m², 50 m³, 20 m"
-                className="w-full mt-1 p-2 border rounded"
-              />
-
-              <label className="text-sm font-medium mt-3 block">Harga Satuan</label>
-              <input
-                type="text"
-                placeholder="Berdasarkan HSPK daerah"
-                className="w-full mt-1 p-2 border rounded"
-              />
-            </div>
-
-            <div>
-              <label className="text-sm font-medium">Jumlah Biaya</label>
-              <input
-                type="text"
-                placeholder="Volume × Harga Satuan"
-                className="w-full mt-1 p-2 border rounded"
-              />
-
-              <label className="text-sm font-medium mt-3 block">Total Anggaran</label>
-              <input
-                type="text"
-                placeholder="Jumlah seluruh biaya (Rp)"
-                className="w-full mt-1 p-2 border rounded"
-              />
-            </div>
+            <label className="text-sm font-medium block">Skor Kelayakan</label>
+            <input
+              name="skor"
+              value={formData.skor}
+              onChange={handleChange}
+              type="text"
+              placeholder="Ex: 85"
+              className="w-full p-2 border rounded"
+            />
           </div>
         )}
 

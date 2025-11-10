@@ -1,10 +1,15 @@
 import { useState } from "react";
-import ProjectModal from "../components/ProjectModal"; // create this component next
+import ProjectModal from "../components/ProjectModal";
 import Card from "../components/Card";
 import { Plus, FilePlus, FolderOpen } from "lucide-react";
+import { useProjects } from "../components/ProjectContext";
 
 export default function Project() {
+  const { projects, addProject } = useProjects();
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  // Filter only completed projects
+  const completedProjects = projects.filter((p) => p.status === "selesai");
 
   return (
     <>
@@ -36,11 +41,25 @@ export default function Project() {
                   </tr>
                 </thead>
                 <tbody className="text-gray-600 text-center">
-                  <tr>
-                    <td className="px-3 py-2 border text-gray-400" colSpan="3">
-                      Belum ada projek
-                    </td>
-                  </tr>
+                  {completedProjects.length === 0 ? (
+                    <tr>
+                      <td className="px-3 py-2 border text-gray-400" colSpan="3">
+                        Belum ada projek selesai
+                      </td>
+                    </tr>
+                  ) : (
+                    completedProjects.map((p) => (
+                      <tr key={p.id}>
+                        <td className="px-3 py-2 border text-left">{p.title}</td>
+                        <td className="px-3 py-2 border text-left">
+                          Rp {p.dana || "-"}
+                        </td>
+                        <td className="px-3 py-2 border text-left">
+                          {p.skor || "-"}
+                        </td>
+                      </tr>
+                    ))
+                  )}
                 </tbody>
               </table>
             </div>
@@ -124,7 +143,12 @@ export default function Project() {
       </div>
 
       {/* MODAL */}
-      {isModalOpen && <ProjectModal onClose={() => setIsModalOpen(false)} />}
+      {isModalOpen && (
+        <ProjectModal
+          onClose={() => setIsModalOpen(false)}
+          onAddProject={addProject}
+        />
+      )}
     </>
   );
 }
