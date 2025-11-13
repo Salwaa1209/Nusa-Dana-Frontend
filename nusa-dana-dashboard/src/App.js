@@ -10,6 +10,7 @@ import Topbar from "./components/Topbar";
 import Dashboard from "./pages/Dashboard";
 import Project from "./pages/Project";
 import DanaDesa from "./pages/DanaDesa";
+import Pekerjaan from "./pages/Pekerjaan";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import { ProjectProvider } from "./components/ProjectContext";
@@ -54,6 +55,7 @@ export default function App() {
                   <Route path="/" element={<Dashboard />} />
                   <Route path="/project" element={<Project />} />
                   <Route path="/danadesa" element={<DanaDesa />} />
+                  <Route path="/pekerjaan" element={<Pekerjaan />} />
                   <Route path="*" element={<Navigate to="/" />} />
                 </Routes>
               </main>
