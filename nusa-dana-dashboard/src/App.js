@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   BrowserRouter as Router,
   Routes,
@@ -10,29 +10,81 @@ import Topbar from "./components/Topbar";
 import Dashboard from "./pages/Dashboard";
 import Project from "./pages/Project";
 import DanaDesa from "./pages/DanaDesa";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
 import { ProjectProvider } from "./components/ProjectContext";
 
 export default function App() {
+  const [user, setUser] = useState(null);
+
+  // Check login status when app loads
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
+  }, []);
+
+  // Handle login (from Login or Register pages)
+  const handleLogin = (userData) => {
+    localStorage.setItem("user", JSON.stringify(userData));
+    setUser(userData);
+  };
+
+  // Handle logout
+  const handleLogout = () => {
+    localStorage.removeItem("user");
+    setUser(null);
+  };
+
   return (
     <ProjectProvider>
       <Router>
-        <div className="flex min-h-screen bg-gray-50">
-          {/* Sidebar */}
-          <Sidebar />
+        {user ? (
+          // If logged in, show main dashboard layout
+          <div className="flex min-h-screen bg-gray-50">
+            {/* Sidebar */}
+            <Sidebar onLogout={handleLogout} />
 
-          {/* Main Content */}
-          <div className="flex-1 flex flex-col">
-            <Topbar />
-            <main className="p-6 flex-1">
-              <Routes>
-                <Route path="/" element={<Dashboard />} />
-                <Route path="/project" element={<Project />} />
-                <Route path="/danadesa" element={<DanaDesa />} />
-                <Route path="*" element={<Navigate to="/" />} />
-              </Routes>
-            </main>
+            {/* Main Content */}
+            <div className="flex-1 flex flex-col">
+              <Topbar user={user} onLogout={handleLogout} />
+              <main className="p-6 flex-1">
+                <Routes>
+                  <Route path="/" element={<Dashboard />} />
+                  <Route path="/project" element={<Project />} />
+                  <Route path="/danadesa" element={<DanaDesa />} />
+                  <Route path="*" element={<Navigate to="/" />} />
+                </Routes>
+              </main>
+            </div>
           </div>
-        </div>
+        ) : (
+          // If not logged in, show login/register routes
+          <Routes>
+            <Route
+              path="/login"
+              element={
+                <Login
+                  onLogin={(data) => {
+                    handleLogin(data);
+                  }}
+                />
+              }
+            />
+            <Route
+              path="/register"
+              element={
+                <Register
+                  onRegister={(data) => {
+                    handleLogin(data);
+                  }}
+                />
+              }
+            />
+            <Route path="*" element={<Navigate to="/login" />} />
+          </Routes>
+        )}
       </Router>
     </ProjectProvider>
   );
