@@ -2,7 +2,6 @@ import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 export default function Register() {
-  const navigate = useNavigate();
 
   const handleRegister = (e) => {
     e.preventDefault();
@@ -11,7 +10,7 @@ export default function Register() {
       email: e.target.email.value,
     };
     localStorage.setItem("user", JSON.stringify(mockUser));
-    navigate("/"); // ✅ same fix here
+    window.location.href = "/"; // reload to trigger App.js state
   };
 
   return (
@@ -22,17 +21,21 @@ export default function Register() {
           "url('https://github.com/arlecchi/image-hosting/blob/6c50b9c530b9b88448c8d492a0cc70d8ae6a7633/signuppage.jpg?raw=true')",
       }}
     >
+      {/* Register Card */}
       <div className="bg-white/90 backdrop-blur-sm shadow-xl rounded-2xl p-10 w-full max-w-md text-center border border-gray-200">
+        {/* Logo */}
         <img
           src="https://github.com/arlecchi/image-hosting/blob/6c50b9c530b9b88448c8d492a0cc70d8ae6a7633/prpllogo.png?raw=true"
           alt="NusaDana Logo"
           className="mx-auto mb-4 w-16"
         />
+
         <p className="text-sm text-gray-600 mb-1">
           Bersama Kami Bangun Desamu
         </p>
         <h2 className="text-lg font-semibold mb-6">Mulai Daftar Sekarang</h2>
 
+        {/* Form */}
         <form onSubmit={handleRegister} className="space-y-4">
           <input
             type="text"
